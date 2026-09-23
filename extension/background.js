@@ -384,7 +384,7 @@ function discoverSite() {
   const generic2 = /^(cloud logging|sap cloud logging)$/i;
   const logo = document.querySelector('img[data-test-subj="customLogo"]');
   const isDashboard = !!document.querySelector(
-    'osd-injected-metadata, kbn-injected-metadata, meta[name="osd-injected-metadata"], meta[name="kbn-injected-metadata"], [data-test-subj="kibanaChrome"]'
+    '[data-test-subj="opensearchDashboardsChrome"], [data-test-subj="kibanaChrome"], [data-test-subj="headerGlobalNav"], osd-injected-metadata, kbn-injected-metadata, meta[name="osd-injected-metadata"], meta[name="kbn-injected-metadata"]'
   );
   if (!isDashboard) return { isDashboard: false };
 
