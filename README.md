@@ -4,7 +4,7 @@
 
 Most log platforms behind corporate SSO don't hand out API tokens. This project sidesteps that entirely: a small Chrome extension executes searches inside your already-logged-in dashboard tab, and an MCP server exposes the results as tools to Claude Code, Claude Desktop, Cursor, or any other MCP client.
 
-![How it works: your MCP client talks to a local MCP server, which forwards searches over a WebSocket to the browser extension running inside your logged-in dashboard tab](docs/images/architecture.png)
+![Architecture: the MCP client (Claude Code, Cursor, Codex, …) connects over Streamable HTTP / SSE on localhost:47822 to the MCP server, which connects over a WebSocket on localhost:47821 to the browser extension in your logged-in dashboard tab. All three run on your machine. The extension then sends authenticated requests to /internal/search/… on Kibana / OpenSearch, using your existing login.](docs/images/architecture.png)
 
 Works with **OpenSearch Dashboards** (including SAP BTP Cloud Logging) and **Kibana**, and the extension auto-detects which flavor it's talking to.
 
