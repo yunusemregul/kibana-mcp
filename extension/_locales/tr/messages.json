@@ -1,0 +1,221 @@
+{
+  "extName": {
+    "message": "Kibana Log Bridge"
+  },
+  "extDescription": {
+    "message": "Oturum açtığınız Kibana / OpenSearch Dashboards sekmesini yerel bir MCP sunucusuna bağlar, böylece AI asistanları loglarınızda arama yapabilir."
+  },
+  "settings": {
+    "message": "Ayarlar"
+  },
+  "statusTitle": {
+    "message": "Durum"
+  },
+  "mcpServer": {
+    "message": "MCP Sunucusu"
+  },
+  "wsConnected": {
+    "message": "Bağlı"
+  },
+  "wsNotRunning": {
+    "message": "Çalışmıyor"
+  },
+  "wsHint": {
+    "message": "AI istemciniz (Claude Code, Cursor, …) açıkken sunucuyu otomatik başlatır. İstemcinize henüz eklemediniz mi?"
+  },
+  "wsHintLink": {
+    "message": "Kurulum adımları"
+  },
+  "environments": {
+    "message": "Ortamlar"
+  },
+  "environmentsNone": {
+    "message": "Henüz yok"
+  },
+  "tabsGoOne": {
+    "message": "$1 sekme · Git"
+  },
+  "tabsGoMany": {
+    "message": "$1 sekme · Git"
+  },
+  "openEnv": {
+    "message": "Aç"
+  },
+  "switchToTabTitle": {
+    "message": "Dashboard sekmesine geç"
+  },
+  "openInNewTabTitle": {
+    "message": "Dashboard'u yeni sekmede aç"
+  },
+  "removeEnvTitle": {
+    "message": "\"$1\" ortamını kaldır"
+  },
+  "confirmDelete": {
+    "message": "silinsin mi?"
+  },
+  "addDashboard": {
+    "message": "➕ Bu dashboard'u ekle ($1)"
+  },
+  "addSiteHint": {
+    "message": "Chrome bu siteye erişim izni isteyecek. Popup kapansa bile dashboard eklenir, kontrol etmek için yeniden açın."
+  },
+  "allowSiteAccess": {
+    "message": "Chrome penceresinde site erişimine izin verin…"
+  },
+  "siteAccessDenied": {
+    "message": "Site erişimi reddedildi"
+  },
+  "detectingEnv": {
+    "message": "Ortam algılanıyor…"
+  },
+  "addedEnv": {
+    "message": "$1 eklendi ($2)"
+  },
+  "removedEnv": {
+    "message": "$1 kaldırıldı"
+  },
+  "notDashboardPage": {
+    "message": "Bu sayfa bir Kibana / OpenSearch Dashboards sayfası değil"
+  },
+  "addEnvironment": {
+    "message": "+ Ortam ekle"
+  },
+  "advanced": {
+    "message": "Gelişmiş"
+  },
+  "wsPortLabel": {
+    "message": "MCP sunucusu WebSocket portu"
+  },
+  "save": {
+    "message": "Kaydet"
+  },
+  "saved": {
+    "message": "Kaydedildi ✓"
+  },
+  "envRemove": {
+    "message": "kaldır"
+  },
+  "envName": {
+    "message": "Ad"
+  },
+  "envUrl": {
+    "message": "Dashboard URL'si"
+  },
+  "envIndex": {
+    "message": "İndeks deseni"
+  },
+  "envNumber": {
+    "message": "Ortam $1"
+  },
+  "envNumberDefault": {
+    "message": "Ortam $1 (varsayılan)"
+  },
+  "errNameAndUrl": {
+    "message": "Her ortam için ad ve URL gerekli"
+  },
+  "errDuplicateName": {
+    "message": "\"$1\" adlı ortam zaten var"
+  },
+  "errInvalidUrl": {
+    "message": "\"$1\" için geçersiz URL"
+  },
+  "lastSearch": {
+    "message": "Son Arama"
+  },
+  "noSearches": {
+    "message": "Henüz arama yok"
+  },
+  "searching": {
+    "message": "Aranıyor…"
+  },
+  "searchError": {
+    "message": "Hata: $1"
+  },
+  "hitsOne": {
+    "message": "$1 sonuç"
+  },
+  "hitsMany": {
+    "message": "$1 sonuç"
+  },
+  "badgeNoServer": {
+    "message": "MCP sunucusu çalışmıyor"
+  },
+  "badgeNoServerTitle": {
+    "message": "Kibana Log Bridge: AI istemciniz bekleniyor. Claude Code, Cursor ya da sunucuyu kullanan başka bir MCP istemcisi açıkken MCP sunucusu otomatik başlar."
+  },
+  "badgeConnected": {
+    "message": "AI bağlı"
+  },
+  "badgeConnectedTitle": {
+    "message": "Kibana Log Bridge: AI bu sekme üzerinden \"$1\" ortamında arama yapabilir."
+  },
+  "badgeSearchingTitle": {
+    "message": "AI arıyor: $1 ($2)"
+  },
+  "badgeDoneTitle": {
+    "message": "Son AI araması $1 ($2): $3"
+  },
+  "badgeFailed": {
+    "message": "AI araması başarısız: $1"
+  },
+  "badgeFailedTitle": {
+    "message": "Son AI araması $1 ($2) başarısız: $3"
+  },
+  "aiBusySearch": {
+    "message": "AI arıyor: $1…"
+  },
+  "aiBusyInspect": {
+    "message": "AI log inceliyor: $1…"
+  },
+  "aiBusyContext": {
+    "message": "AI bağlam topluyor: $1…"
+  },
+  "aiBusySummarize": {
+    "message": "AI özetliyor: $1…"
+  },
+  "aiDidSearch": {
+    "message": "AI aradı: $1"
+  },
+  "aiDidInspect": {
+    "message": "AI log inceledi: $1"
+  },
+  "aiDidContext": {
+    "message": "AI bağlam topladı: $1"
+  },
+  "aiDidSummarize": {
+    "message": "AI özetledi: $1"
+  },
+  "aiDidFields": {
+    "message": "AI alanları taradı: $1"
+  },
+  "allLogs": {
+    "message": "tüm loglar"
+  },
+  "popNoSearches": {
+    "message": "Bu dashboard'da henüz AI araması yok."
+  },
+  "popSearchFailed": {
+    "message": "Arama başarısız"
+  },
+  "popPrevious": {
+    "message": "Önceki AI aramaları"
+  },
+  "popAll": {
+    "message": "(tümü)"
+  },
+  "popAddFilter": {
+    "message": "Filtre ekle"
+  },
+  "historySearching": {
+    "message": "aranıyor"
+  },
+  "historyError": {
+    "message": "hata"
+  },
+  "lastMinutesOne": {
+    "message": "Son 1 dakika"
+  },
+  "lastMinutesMany": {
+    "message": "Son $1 dakika"
+  }
+}

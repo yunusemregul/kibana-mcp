@@ -460,7 +460,7 @@ async function addSiteNow({ tabId, origin }) {
     const [res] = await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: discoverSite });
     discovered = res?.result || null;
   } catch (e) { /* page not scriptable, so use fallbacks */ }
-  if (discovered?.isDashboard === false) throw new Error("This page isn't a Kibana / OpenSearch Dashboards page");
+  if (discovered?.isDashboard === false) throw new Error(chrome.i18n.getMessage("notDashboardPage"));
 
   const indexPattern = discovered?.defaultTitle || discovered?.all?.[0] || "logs-*";
   const base = slugify(discovered?.name || "") || new URL(origin).hostname.split(".")[0] || "default";

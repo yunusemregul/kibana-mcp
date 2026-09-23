@@ -3,27 +3,40 @@ let settingsHydrated = false;
 let lastStatus = null;
 let activeTab = null;
 
+const t = (key, ...subs) => chrome.i18n.getMessage(key, subs.map(String)) || key;
+const plural = (n, one, many) => t(Number(n) === 1 ? one : many, Number(n).toLocaleString());
+
+function applyI18n(root) {
+  root.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  root.querySelectorAll("[data-i18n-placeholder]").forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  root.querySelectorAll("[data-i18n-title]").forEach(el => { el.title = t(el.dataset.i18nTitle); });
+}
+
+document.documentElement.lang = chrome.i18n.getUILanguage();
+applyI18n(document);
+
 function envRow(env = {}) {
   const card = document.createElement("div");
   card.className = "env-card";
   card.innerHTML = `
     <div class="env-card-head">
       <span class="env-num"></span>
-      <button class="remove-btn">remove</button>
+      <button class="remove-btn" data-i18n="envRemove"></button>
     </div>
     <div class="field">
-      <label>Name</label>
+      <label data-i18n="envName"></label>
       <input type="text" class="env-name" placeholder="prod" spellcheck="false">
     </div>
     <div class="field">
-      <label>Dashboard URL</label>
+      <label data-i18n="envUrl"></label>
       <input type="text" class="env-url" placeholder="https://logs.example.com" spellcheck="false">
     </div>
     <div class="field">
-      <label>Index pattern</label>
+      <label data-i18n="envIndex"></label>
       <input type="text" class="env-index" placeholder="logs-*" spellcheck="false">
     </div>
   `;
+  applyI18n(card);
   card.querySelector(".env-name").value = env.name || "";
   card.querySelector(".env-url").value = (env.dashboardPattern || "").replace(/\/\*$/, "");
   card.querySelector(".env-index").value = env.indexPattern || "";
@@ -36,7 +49,7 @@ function envRow(env = {}) {
 
 function renumberEnvCards() {
   document.querySelectorAll("#env-list .env-card .env-num").forEach((el, i) => {
-    el.textContent = `Environment ${i + 1}${i === 0 ? " (default)" : ""}`;
+    el.textContent = t(i === 0 ? "envNumberDefault" : "envNumber", i + 1);
   });
 }
 
@@ -76,11 +89,11 @@ function render(status) {
   wsStatus.classList.remove("ok", "err");
   if (status.wsConnected) {
     wsDot.classList.add("green");
-    wsStatus.textContent = "Connected";
+    wsStatus.textContent = t("wsConnected");
     wsStatus.classList.add("ok");
   } else {
     wsDot.classList.add("red");
-    wsStatus.textContent = "Not running";
+    wsStatus.textContent = t("wsNotRunning");
     wsStatus.classList.add("err");
   }
   document.getElementById("ws-hint").hidden = status.wsConnected;
@@ -92,8 +105,8 @@ function render(status) {
     envRows.innerHTML = `
       <div class="status-row">
         <span class="dot red"></span>
-        <span class="status-label">Environments</span>
-        <span class="status-value err">None yet</span>
+        <span class="status-label">${t("environments")}</span>
+        <span class="status-value err">${t("environmentsNone")}</span>
       </div>
     `;
   } else {
@@ -110,15 +123,15 @@ function render(status) {
       row.appendChild(label);
       const btn = document.createElement("button");
       btn.className = `open-btn ${ok ? "ok" : ""}`;
-      btn.textContent = ok ? `${env.tabCount} tab${env.tabCount > 1 ? "s" : ""} · Go` : "Open";
-      btn.title = ok ? "Switch to the dashboard tab" : "Open the dashboard in a new tab";
+      btn.textContent = ok ? plural(env.tabCount, "tabsGoOne", "tabsGoMany") : t("openEnv");
+      btn.title = t(ok ? "switchToTabTitle" : "openInNewTabTitle");
       btn.addEventListener("click", () => openEnvironment(env));
       row.appendChild(btn);
       const del = document.createElement("button");
       del.className = "trash-btn";
-      del.title = `Remove "${env.name}"`;
+      del.title = t("removeEnvTitle", env.name);
       const armed = confirmRemove === env.dashboardPattern;
-      del.textContent = armed ? "delete?" : "✕";
+      del.textContent = armed ? t("confirmDelete") : "✕";
       del.classList.toggle("armed", armed);
       del.addEventListener("click", () => {
         if (confirmRemove === env.dashboardPattern) {
@@ -153,11 +166,11 @@ function render(status) {
 
     let resultHtml = "";
     if (s.status === "searching") {
-      resultHtml = `<span class="status-value warn">Searching...</span>`;
+      resultHtml = `<span class="status-value warn">${t("searching")}</span>`;
     } else if (s.status === "error") {
-      resultHtml = `<span class="status-value err">Error: ${s.error}</span>`;
+      resultHtml = `<span class="status-value err">${t("searchError", s.error)}</span>`;
     } else if (s.status === "done") {
-      resultHtml = `<span class="status-value ok">${s.hits} hits</span>`;
+      resultHtml = `<span class="status-value ok">${plural(s.hits, "hitsOne", "hitsMany")}</span>`;
     }
 
     container.innerHTML = `
@@ -189,7 +202,7 @@ async function removeEnvironment(env) {
   await chrome.storage.sync.set({ environments });
   chrome.permissions.remove({ origins: [env.dashboardPattern] }).catch(() => {});
   settingsHydrated = false;
-  showSaveMsg(`Removed ${env.name}`, true);
+  showSaveMsg(t("removedEnv", env.name), true);
   poll();
 }
 
@@ -214,7 +227,7 @@ function updateAddSiteButton() {
   btn.hidden = alreadyConfigured || peekedName === undefined || !peekedDashboard;
   hint.hidden = btn.hidden;
   if (!btn.hidden && !btn.dataset.busy) {
-    btn.textContent = `➕ Add this dashboard (${peekedName || new URL(origin).hostname})`;
+    btn.textContent = t("addDashboard", peekedName || new URL(origin).hostname);
     btn.disabled = false;
   }
 }
@@ -247,18 +260,18 @@ async function addCurrentSite() {
     // Chrome's permission prompt may close this popup, so the background
     // finishes the add on permissions.onAdded. We only kick it off here.
     await chrome.runtime.sendMessage({ type: "PREPARE_ADD_SITE", tabId: activeTab.id, origin });
-    btn.textContent = "Allow site access in the Chrome prompt…";
+    btn.textContent = t("allowSiteAccess");
     const granted = await chrome.permissions.request({ origins: [pattern] });
     if (!granted) {
       await chrome.runtime.sendMessage({ type: "CANCEL_ADD_SITE", origin });
       delete btn.dataset.busy;
       updateAddSiteButton();
-      showSaveMsg("Site access denied", false);
+      showSaveMsg(t("siteAccessDenied"), false);
       return;
     }
   }
 
-  btn.textContent = "Detecting environment…";
+  btn.textContent = t("detectingEnv");
   const res = await chrome.runtime.sendMessage({ type: "ADD_SITE", tabId: activeTab.id, origin });
   delete btn.dataset.busy;
   settingsHydrated = false;
@@ -267,7 +280,7 @@ async function addCurrentSite() {
     showSaveMsg(res.error, false);
     return;
   }
-  showSaveMsg(`Added ${res.name} (${res.indexPattern})`, true);
+  showSaveMsg(t("addedEnv", res.name, res.indexPattern), true);
   poll();
 }
 
@@ -291,11 +304,11 @@ async function saveSettings() {
     const indexPattern = card.querySelector(".env-index").value.trim() || "logs-*";
     if (!name && !urlInput) continue; // skip fully empty rows
     if (!name || !urlInput) {
-      showSaveMsg("Each environment needs a name and URL", false);
+      showSaveMsg(t("errNameAndUrl"), false);
       return;
     }
     if (seenNames.has(name.toLowerCase())) {
-      showSaveMsg(`Duplicate environment name "${name}"`, false);
+      showSaveMsg(t("errDuplicateName", name), false);
       return;
     }
     seenNames.add(name.toLowerCase());
@@ -304,7 +317,7 @@ async function saveSettings() {
     try {
       origin = new URL(urlInput.includes("://") ? urlInput : `https://${urlInput}`).origin;
     } catch (e) {
-      showSaveMsg(`Invalid URL for "${name}"`, false);
+      showSaveMsg(t("errInvalidUrl", name), false);
       return;
     }
     environments.push({ name, dashboardPattern: `${origin}/*`, indexPattern });
@@ -315,13 +328,13 @@ async function saveSettings() {
       origins: environments.map(e => e.dashboardPattern),
     });
     if (!granted) {
-      showSaveMsg("Site access denied", false);
+      showSaveMsg(t("siteAccessDenied"), false);
       return;
     }
   }
 
   await chrome.storage.sync.set({ environments, wsPort });
-  showSaveMsg("Saved ✓", true);
+  showSaveMsg(t("saved"), true);
 }
 
 document.getElementById("save-btn").addEventListener("click", () => {

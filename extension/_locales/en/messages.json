@@ -1,0 +1,221 @@
+{
+  "extName": {
+    "message": "Kibana Log Bridge"
+  },
+  "extDescription": {
+    "message": "Bridges your authenticated Kibana / OpenSearch Dashboards browser session to a local MCP server so AI assistants can search your logs."
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "statusTitle": {
+    "message": "Status"
+  },
+  "mcpServer": {
+    "message": "MCP Server"
+  },
+  "wsConnected": {
+    "message": "Connected"
+  },
+  "wsNotRunning": {
+    "message": "Not running"
+  },
+  "wsHint": {
+    "message": "Your AI client (Claude Code, Cursor, …) starts it automatically while it's open. Not added to your client yet?"
+  },
+  "wsHintLink": {
+    "message": "See setup"
+  },
+  "environments": {
+    "message": "Environments"
+  },
+  "environmentsNone": {
+    "message": "None yet"
+  },
+  "tabsGoOne": {
+    "message": "$1 tab · Go"
+  },
+  "tabsGoMany": {
+    "message": "$1 tabs · Go"
+  },
+  "openEnv": {
+    "message": "Open"
+  },
+  "switchToTabTitle": {
+    "message": "Switch to the dashboard tab"
+  },
+  "openInNewTabTitle": {
+    "message": "Open the dashboard in a new tab"
+  },
+  "removeEnvTitle": {
+    "message": "Remove \"$1\""
+  },
+  "confirmDelete": {
+    "message": "delete?"
+  },
+  "addDashboard": {
+    "message": "➕ Add this dashboard ($1)"
+  },
+  "addSiteHint": {
+    "message": "Chrome will ask for access to this site. If the popup closes, the dashboard is still added, so reopen to check."
+  },
+  "allowSiteAccess": {
+    "message": "Allow site access in the Chrome prompt…"
+  },
+  "siteAccessDenied": {
+    "message": "Site access denied"
+  },
+  "detectingEnv": {
+    "message": "Detecting environment…"
+  },
+  "addedEnv": {
+    "message": "Added $1 ($2)"
+  },
+  "removedEnv": {
+    "message": "Removed $1"
+  },
+  "notDashboardPage": {
+    "message": "This page isn't a Kibana / OpenSearch Dashboards page"
+  },
+  "addEnvironment": {
+    "message": "+ Add environment"
+  },
+  "advanced": {
+    "message": "Advanced"
+  },
+  "wsPortLabel": {
+    "message": "MCP server WebSocket port"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "saved": {
+    "message": "Saved ✓"
+  },
+  "envRemove": {
+    "message": "remove"
+  },
+  "envName": {
+    "message": "Name"
+  },
+  "envUrl": {
+    "message": "Dashboard URL"
+  },
+  "envIndex": {
+    "message": "Index pattern"
+  },
+  "envNumber": {
+    "message": "Environment $1"
+  },
+  "envNumberDefault": {
+    "message": "Environment $1 (default)"
+  },
+  "errNameAndUrl": {
+    "message": "Each environment needs a name and URL"
+  },
+  "errDuplicateName": {
+    "message": "Duplicate environment name \"$1\""
+  },
+  "errInvalidUrl": {
+    "message": "Invalid URL for \"$1\""
+  },
+  "lastSearch": {
+    "message": "Last Search"
+  },
+  "noSearches": {
+    "message": "No searches yet"
+  },
+  "searching": {
+    "message": "Searching…"
+  },
+  "searchError": {
+    "message": "Error: $1"
+  },
+  "hitsOne": {
+    "message": "$1 hit"
+  },
+  "hitsMany": {
+    "message": "$1 hits"
+  },
+  "badgeNoServer": {
+    "message": "MCP server not running"
+  },
+  "badgeNoServerTitle": {
+    "message": "Kibana Log Bridge: waiting for your AI client. The MCP server starts automatically while Claude Code, Cursor or another MCP client that uses it is open."
+  },
+  "badgeConnected": {
+    "message": "AI connected"
+  },
+  "badgeConnectedTitle": {
+    "message": "Kibana Log Bridge: the AI can search \"$1\" through this tab."
+  },
+  "badgeSearchingTitle": {
+    "message": "AI is searching $1 ($2)"
+  },
+  "badgeDoneTitle": {
+    "message": "Last AI search $1 at $2: $3"
+  },
+  "badgeFailed": {
+    "message": "AI search for $1 failed"
+  },
+  "badgeFailedTitle": {
+    "message": "Last AI search $1 at $2 failed: $3"
+  },
+  "aiBusySearch": {
+    "message": "AI is searching $1…"
+  },
+  "aiBusyInspect": {
+    "message": "AI is inspecting a log in $1…"
+  },
+  "aiBusyContext": {
+    "message": "AI is pulling context from $1…"
+  },
+  "aiBusySummarize": {
+    "message": "AI is summarizing $1…"
+  },
+  "aiDidSearch": {
+    "message": "AI searched $1"
+  },
+  "aiDidInspect": {
+    "message": "AI inspected a log in $1"
+  },
+  "aiDidContext": {
+    "message": "AI pulled context from $1"
+  },
+  "aiDidSummarize": {
+    "message": "AI summarized $1"
+  },
+  "aiDidFields": {
+    "message": "AI scanned fields in $1"
+  },
+  "allLogs": {
+    "message": "all logs"
+  },
+  "popNoSearches": {
+    "message": "No AI searches on this dashboard yet."
+  },
+  "popSearchFailed": {
+    "message": "Search failed"
+  },
+  "popPrevious": {
+    "message": "Previous AI searches"
+  },
+  "popAll": {
+    "message": "(all)"
+  },
+  "popAddFilter": {
+    "message": "Add filter"
+  },
+  "historySearching": {
+    "message": "searching"
+  },
+  "historyError": {
+    "message": "error"
+  },
+  "lastMinutesOne": {
+    "message": "Last 1 minute"
+  },
+  "lastMinutesMany": {
+    "message": "Last $1 minutes"
+  }
+}

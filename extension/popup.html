@@ -73,8 +73,8 @@
     .dot.green { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
     .dot.red { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
     .dot.yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b88; }
-    .status-label { color: #94a3b8; }
-    .status-value { margin-left: auto; font-weight: 500; }
+    .status-label { color: #94a3b8; min-width: 0; overflow-wrap: anywhere; }
+    .status-value { margin-left: auto; font-weight: 500; text-align: right; }
     .status-value.ok { color: #22c55e; }
     .status-value.err { color: #ef4444; }
     .status-value.warn { color: #f59e0b; }
@@ -101,6 +101,8 @@
       border: 1px solid #4f46e5;
       border-radius: 5px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .open-btn:hover { background: #312e81; }
     .open-btn.ok { color: #22c55e; border-color: #166534; }
@@ -114,6 +116,8 @@
       padding: 0 2px;
       margin-left: 6px;
       line-height: 1;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .trash-btn:hover { color: #ef4444; }
     .trash-btn.armed {
@@ -212,9 +216,7 @@
       border-radius: 6px;
       cursor: pointer;
       text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      overflow-wrap: anywhere;
     }
     .add-site-btn:hover { background: #6366f1; }
     .add-site-btn:disabled { background: #334155; color: #94a3b8; cursor: default; }
@@ -263,48 +265,48 @@
 <body>
   <div class="header">
     <div class="title-block">
-      <h1>Kibana Log Bridge</h1>
+      <h1 data-i18n="extName"></h1>
       <div class="subtitle" id="active-tab-name"></div>
     </div>
-    <button class="gear-btn" id="gear-btn" title="Settings">⚙</button>
+    <button class="gear-btn" id="gear-btn" data-i18n-title="settings">⚙</button>
   </div>
 
   <div class="section">
-    <div class="section-title">Status</div>
+    <div class="section-title" data-i18n="statusTitle"></div>
     <div class="status-row">
       <span class="dot" id="ws-dot"></span>
-      <span class="status-label">MCP Server</span>
+      <span class="status-label" data-i18n="mcpServer"></span>
       <span class="status-value" id="ws-status"></span>
     </div>
-    <div class="hint" id="ws-hint" hidden>Your AI client (Claude Code, Cursor, …) starts it automatically while it's open. Not added to your client yet? <a href="https://github.com/yunusemregul/kibana-mcp#1-add-it-to-your-ai-client" target="_blank">See setup</a>.</div>
+    <div class="hint" id="ws-hint" hidden><span data-i18n="wsHint"></span> <a href="https://github.com/yunusemregul/kibana-mcp#1-add-it-to-your-ai-client" target="_blank" data-i18n="wsHintLink"></a>.</div>
     <div id="env-status-rows"></div>
     <button class="add-site-btn" id="add-site-btn" hidden></button>
-    <div class="hint" id="add-site-hint" hidden>Chrome will ask for access to this site. If the popup closes, the dashboard is still added, so reopen to check.</div>
+    <div class="hint" id="add-site-hint" hidden data-i18n="addSiteHint"></div>
   </div>
 
   <div class="section" id="settings-section" hidden>
-    <div class="section-title">Environments</div>
+    <div class="section-title" data-i18n="environments"></div>
     <div id="env-list"></div>
     <div class="save-row">
-      <button class="add-btn" id="add-env-btn">+ Add environment</button>
+      <button class="add-btn" id="add-env-btn" data-i18n="addEnvironment"></button>
     </div>
     <details class="advanced">
-      <summary>Advanced</summary>
+      <summary data-i18n="advanced"></summary>
       <div class="field">
-        <label for="ws-port">MCP server WebSocket port</label>
+        <label for="ws-port" data-i18n="wsPortLabel"></label>
         <input type="number" id="ws-port" placeholder="47821">
       </div>
     </details>
     <div class="save-row">
-      <button class="save-btn" id="save-btn">Save</button>
+      <button class="save-btn" id="save-btn" data-i18n="save"></button>
       <span class="save-msg" id="save-msg"></span>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">Last Search</div>
+    <div class="section-title" data-i18n="lastSearch"></div>
     <div id="last-search-container">
-      <span class="empty">No searches yet</span>
+      <span class="empty" data-i18n="noSearches"></span>
     </div>
   </div>
 

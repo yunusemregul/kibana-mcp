@@ -1,5 +1,7 @@
 # Kibana Bridge MCP
 
+**English** | [Türkçe](README.tr.md)
+
 **Let your AI assistant search Kibana / OpenSearch Dashboards logs through your logged-in browser tab. No API keys, no service accounts.**
 
 Log platforms behind corporate SSO rarely hand out API tokens. Your browser session is the one credential you always have, so a small extension runs the searches inside your dashboard tab and an MCP server hands the results to Claude Code, Cursor, Codex or any other MCP client.
@@ -66,7 +68,7 @@ Works in Chrome, Edge, Brave, Arc, Vivaldi and Opera. Install it in the browser 
 ![Click Load unpacked](docs/images/step2-load-unpacked.png)
 ![Kibana Log Bridge installed](docs/images/step3-installed.png)
 
-In Edge, Developer mode is in the left sidebar. In the folder picker, press ⌘⇧G on macOS or use the address bar on Windows to paste the path. Add `--browser brave` (or `chrome`, `edge`, …) to the command to pick a browser other than your default.
+In Edge, Developer mode is in the left sidebar. In the folder picker, press ⌘⇧G on macOS or use the address bar on Windows to paste the path. Add `--browser brave` (or `chrome`, `edge`, …) to the command to pick a browser other than your default, or `--lang tr|en` to set the output language.
 </details>
 
 ### 3. Add your dashboard

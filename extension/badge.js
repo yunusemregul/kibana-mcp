@@ -99,26 +99,41 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
   let lastStatus = null;
   let hideTimer = null;
 
-  // Past-tense verb for what the AI did, based on the tool that ran.
-  function describeVerb(s) {
-    if (!s) return "searched";
-    if (s.tool === "inspect_log") return "inspected a log in";
-    if (s.tool === "get_log_context") return "pulled context from";
-    if (s.mode === "summarize") return "summarized";
-    if (s.mode === "fields") return "scanned fields in";
-    return "searched";
+  const msg = (key, ...subs) => {
+    try { return chrome.i18n.getMessage(key, subs.map(String)) || key; } catch (e) { return key; }
+  };
+  const hitsText = (n, bold) => {
+    const num = Number(n).toLocaleString();
+    return msg(Number(n) === 1 ? "hitsOne" : "hitsMany", bold ? `<b>${num}</b>` : num);
+  };
+  const lastMinutes = (m) => Number(m) === 1 ? msg("lastMinutesOne") : msg("lastMinutesMany", m);
+
+  function doneKey(s) {
+    if (s?.tool === "inspect_log") return "aiDidInspect";
+    if (s?.tool === "get_log_context") return "aiDidContext";
+    if (s?.mode === "summarize") return "aiDidSummarize";
+    if (s?.mode === "fields") return "aiDidFields";
+    return "aiDidSearch";
+  }
+
+  function busyKey(s) {
+    if (s?.tool === "inspect_log") return "aiBusyInspect";
+    if (s?.tool === "get_log_context") return "aiBusyContext";
+    if (s?.mode === "summarize") return "aiBusySummarize";
+    return "aiBusySearch";
   }
 
   const esc = (t) => String(t ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const fmtTime = (iso) => { const d = new Date(iso); return isNaN(d) ? String(iso) : d.toLocaleTimeString(); };
   const fmtRange = (s) => s.timeFrom && s.timeTo
     ? `${new Date(s.timeFrom).toLocaleString()} → ${new Date(s.timeTo).toLocaleString()}`
-    : `Last ${s.timeRangeMinutes} minutes`;
+    : lastMinutes(s.timeRangeMinutes);
 
   function ensurePop() {
     if (pop && pop.isConnected) return pop;
     pop = document.createElement("div");
     pop.className = "klb-pop";
+    pop.lang = msg("@@ui_locale").replace("_", "-");
     pop.addEventListener("mouseenter", () => { hovering = true; clearTimeout(hideTimer); clearTimeout(autoTimer); });
     pop.addEventListener("mouseleave", () => { hovering = false; scheduleHide(); });
     document.body.appendChild(pop);
@@ -147,11 +162,11 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
     const history = (lastStatus.searchHistory || []).filter(mine);
     const s = history[0];
     if (!s) {
-      pop.innerHTML = `<div class="klb-pop-head"><span class="klb-title">Kibana Log Bridge</span></div>
-        <div class="klb-pop-body"><span class="klb-empty">No AI searches on this dashboard yet.</span></div>`;
+      pop.innerHTML = `<div class="klb-pop-head"><span class="klb-title">${esc(msg("extName"))}</span></div>
+        <div class="klb-pop-body"><span class="klb-empty">${esc(msg("popNoSearches"))}</span></div>`;
       return;
     }
-    const state = s.status === "searching" ? `<span class="klb-spin"></span> Searching…` : s.status === "error" ? "Search failed" : `<b>${Number(s.hits).toLocaleString()}</b> hits`;
+    const state = s.status === "searching" ? `<span class="klb-spin"></span> ${esc(msg("searching"))}` : s.status === "error" ? esc(msg("popSearchFailed")) : hitsText(s.hits, true);
     const filters = [
       ...(s.timestampMatch ? [`<span class="klb-pill"><b>@timestamp:</b> ${esc(s.timestampMatch)}</span>`] : []),
       ...(s.queryDsl ? [`<span class="klb-pill klb-dsl" title="${esc(JSON.stringify(s.queryDsl, null, 2))}"><b>query DSL:</b> ${esc(JSON.stringify(s.queryDsl).slice(0, 80))}</span>`] : []),
@@ -168,7 +183,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
       : "";
     const older = history.slice(1, 5);
     const histList = older.length
-      ? `<div class="klb-hist-list"><div class="klb-section-title">Previous AI searches</div>${older.map(h => `<div class="klb-hist-item"><span>${esc(h.time)}</span><span class="klb-hq">${esc(h.query || "(all)")}</span><span>${h.status === "done" ? Number(h.hits).toLocaleString() + " hits" : h.status}</span></div>`).join("")}</div>`
+      ? `<div class="klb-hist-list"><div class="klb-section-title">${esc(msg("popPrevious"))}</div>${older.map(h => `<div class="klb-hist-item"><span>${esc(h.time)}</span><span class="klb-hq">${esc(h.query || msg("popAll"))}</span><span>${esc(h.status === "done" ? hitsText(h.hits) : h.status === "searching" ? msg("historySearching") : h.status === "error" ? msg("historyError") : h.status)}</span></div>`).join("")}</div>`
       : "";
     const sameDay = (a, b) => new Date(a).toDateString() === new Date(b).toDateString();
     const fmtAbs = (iso, dateOnlyIfNeeded) => {
@@ -179,9 +194,9 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
     };
     const timeText = s.timeFrom && s.timeTo
       ? `<span>${esc(fmtAbs(s.timeFrom))}</span><span class="klb-arrow">→</span><span>${esc(fmtAbs(s.timeTo, sameDay(s.timeFrom, s.timeTo)))}</span>`
-      : `<span>Last ${s.timeRangeMinutes} minutes</span>`;
+      : `<span>${esc(lastMinutes(s.timeRangeMinutes))}</span>`;
     pop.innerHTML = `
-      <div class="klb-pop-head"><span class="klb-title">AI ${describeVerb(s)} ${esc(s.query ? `"${s.query}"` : "all logs")}</span><span class="klb-when">${esc(s.time)}</span></div>
+      <div class="klb-pop-head"><span class="klb-title">${esc(msg(doneKey(s), s.query ? `"${s.query}"` : msg("allLogs")))}</span><span class="klb-when">${esc(s.time)}</span></div>
       <div class="klb-pop-body">
         <div class="klb-bar">
           <div class="klb-search">
@@ -196,7 +211,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
         </div>
         <div class="klb-filterbar">
           <span class="klb-ico klb-ico-muted">${ICON_FILTER}</span>
-          ${filters || `<span class="klb-addfilter">${ICON_PLUS} Add filter</span>`}
+          ${filters || `<span class="klb-addfilter">${ICON_PLUS} ${esc(msg("popAddFilter"))}</span>`}
           ${s.indexPattern ? `<span class="klb-index">${esc(s.indexPattern)}</span>` : ""}
         </div>
         ${s.status === "error" ? `<div class="klb-error">${esc(s.error)}</div>` : ""}
@@ -258,9 +273,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
     const stateEl = el.querySelector(".klb-state");
     const s = status.lastSearch;
     const mine = s && (!s.environment || s.environment.toLowerCase() === env.name.toLowerCase());
-    const q = s?.query ? `"${s.query.length > 40 ? s.query.slice(0, 40) + "…" : s.query}"` : "all logs";
-    const verb = describeVerb(s);
-    const hitsText = (n) => `${Number(n).toLocaleString()} hit${Number(n) === 1 ? "" : "s"}`;
+    const q = s?.query ? `"${s.query.length > 40 ? s.query.slice(0, 40) + "…" : s.query}"` : msg("allLogs");
     const busy = !!(mine && s.status === "searching");
     const wasBusy = el.classList.contains("busy");
     el.classList.toggle("busy", busy);
@@ -268,20 +281,20 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
     else if (!busy && wasBusy) autoShow(false);
     el.classList.toggle("err", !!(mine && s.status === "error"));
     if (!status.wsConnected) {
-      stateEl.textContent = "MCP server not running";
-      el.dataset.title = "Kibana Log Bridge: waiting for your AI client. The MCP server starts automatically while Claude Code, Cursor or another MCP client that uses it is open.";
+      stateEl.textContent = msg("badgeNoServer");
+      el.dataset.title = msg("badgeNoServerTitle");
     } else if (mine && s.status === "searching") {
-      stateEl.textContent = `AI is ${s.tool === "inspect_log" ? "inspecting a log in" : s.tool === "get_log_context" ? "pulling context from" : s.mode === "summarize" ? "summarizing" : "searching"} ${q}…`;
-      el.dataset.title = `AI is searching ${q} (${s.time})`;
+      stateEl.textContent = msg(busyKey(s), q);
+      el.dataset.title = msg("badgeSearchingTitle", q, s.time);
     } else if (mine && s.status === "done") {
-      stateEl.textContent = `AI ${verb} ${q} · ${hitsText(s.hits)}`;
-      el.dataset.title = `Last AI search ${q} at ${s.time}: ${s.hits} hits`;
+      stateEl.textContent = `${msg(doneKey(s), q)} · ${hitsText(s.hits)}`;
+      el.dataset.title = msg("badgeDoneTitle", q, s.time, hitsText(s.hits));
     } else if (mine && s.status === "error") {
-      stateEl.textContent = `AI search for ${q} failed`;
-      el.dataset.title = `Last AI search ${q} at ${s.time} failed: ${s.error}`;
+      stateEl.textContent = msg("badgeFailed", q);
+      el.dataset.title = msg("badgeFailedTitle", q, s.time, s.error);
     } else {
-      stateEl.textContent = "AI connected";
-      el.dataset.title = `Kibana Log Bridge: the AI can search "${env.name}" through this tab.`;
+      stateEl.textContent = msg("badgeConnected");
+      el.dataset.title = msg("badgeConnectedTitle", env.name);
     }
   }
 
