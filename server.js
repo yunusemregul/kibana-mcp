@@ -115,7 +115,7 @@ function withVersionNote(handler) {
   return async (request) => {
     const result = await handler(request);
     if (activeBrowserConnection && extensionVersion !== VERSION) {
-      result.content?.push({ type: "text", text: `⚠️ The Kibana Log Bridge extension is outdated (extension ${extensionVersion || 'unknown version'}, server ${VERSION}). Tell the user to run \`npx kibana-bridge-mcp install-extension\` and click reload on the extension in their browser's extensions page (chrome://extensions, brave://extensions, edge://extensions, …).` });
+      result.content?.push({ type: "text", text: `⚠️ The Kibana Log Bridge extension is outdated (extension ${extensionVersion || 'unknown version'}, server ${VERSION}). Tell the user to run \`npx -y kibana-bridge-mcp@latest install-extension\` and click reload on the extension in their browser's extensions page (chrome://extensions, brave://extensions, edge://extensions, …).` });
     }
     return result;
   };

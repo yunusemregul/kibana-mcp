@@ -52,7 +52,7 @@ Four steps, about two minutes. Using Claude Code, Codex or another agent with a 
 **Claude Code:**
 
 ```bash
-claude mcp add kibana-logs -- npx kibana-bridge-mcp
+claude mcp add kibana-logs -- npx -y kibana-bridge-mcp@latest
 ```
 
 **Claude Desktop / Cursor / other clients** — add to your MCP config:
@@ -62,7 +62,7 @@ claude mcp add kibana-logs -- npx kibana-bridge-mcp
   "mcpServers": {
     "kibana-logs": {
       "command": "npx",
-      "args": ["kibana-bridge-mcp"]
+      "args": ["-y", "kibana-bridge-mcp@latest"]
     }
   }
 }
@@ -71,21 +71,21 @@ claude mcp add kibana-logs -- npx kibana-bridge-mcp
 **Other CLIs:**
 
 ```bash
-codex mcp add kibana-logs -- npx kibana-bridge-mcp                                # OpenAI Codex
-gemini mcp add kibana-logs npx kibana-bridge-mcp                                  # Gemini CLI
-code --add-mcp '{"name":"kibana-logs","command":"npx","args":["kibana-bridge-mcp"]}'  # VS Code
+codex mcp add kibana-logs -- npx -y kibana-bridge-mcp@latest                              # OpenAI Codex
+gemini mcp add kibana-logs npx kibana-bridge-mcp@latest                                   # Gemini CLI
+code --add-mcp '{"name":"kibana-logs","command":"npx","args":["-y","kibana-bridge-mcp@latest"]}'  # VS Code
 ```
 
 Config file locations: Claude Desktop `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows); Cursor `~/.cursor/mcp.json`.
 
-**Windows:** many clients spawn the command without a shell and can't find `npx` (it's `npx.cmd`), so wrap it in `cmd /c`: `claude mcp add kibana-logs -- cmd /c npx kibana-bridge-mcp`, or in JSON `"command": "cmd", "args": ["/c", "npx", "kibana-bridge-mcp"]`.
+**Windows:** many clients spawn the command without a shell and can't find `npx` (it's `npx.cmd`), so wrap it in `cmd /c`: `claude mcp add kibana-logs -- cmd /c npx -y kibana-bridge-mcp@latest`, or in JSON `"command": "cmd", "args": ["/c", "npx", "-y", "kibana-bridge-mcp@latest"]`.
 
-That's it — no terminal to keep open, no process to manage. The client spawns the server on demand, and if several MCP clients each spawn one, the extra instances detect the running one and transparently proxy to it, so they all share a single browser bridge.
+That's it — no terminal to keep open, no process to manage. The client spawns the server on demand, and if several MCP clients each spawn one, the extra instances detect the running one and transparently proxy to it, so they all share a single browser bridge. `@latest` makes npx check npm for a new release on each launch, so the server keeps itself up to date — and if the extension falls behind, the AI tells you to re-run `install-extension`.
 
 <details>
 <summary>Prefer a standalone long-running server?</summary>
 
-Run `npx kibana-bridge-mcp` in a terminal (or `npm run pm2:start` from a clone) and point clients at it over HTTP instead:
+Run `npx -y kibana-bridge-mcp@latest` in a terminal (or `npm run pm2:start` from a clone) and point clients at it over HTTP instead:
 
 ```bash
 claude mcp add --transport http kibana-logs http://localhost:47822/mcp
@@ -99,7 +99,7 @@ Clients that only support the legacy SSE transport can use `http://localhost:478
 The extension works in any Chromium browser (Chrome, Edge, Brave, Arc, Vivaldi, Opera, …) but not Firefox or Safari. It isn't on the Chrome Web Store yet — load it unpacked (30 seconds). First copy it to a stable folder:
 
 ```bash
-npx kibana-bridge-mcp install-extension
+npx -y kibana-bridge-mcp@latest install-extension
 ```
 
 This puts it in `~/.kibana-bridge/extension`, copies that path to your clipboard, and opens your default browser's extensions page (`chrome://extensions`, `edge://extensions`, `brave://extensions`, …), falling back to Chrome. Pick a different browser with `--browser chrome|brave|edge|arc|vivaldi|opera|chromium`. Then:
@@ -147,7 +147,7 @@ Paste this into Claude Code, Codex, Cursor or any agent with a terminal:
 Steps 1–2 are commands you can run; the rest are browser clicks only the user can do — Chrome doesn't let scripts or extensions toggle Developer mode, load unpacked extensions, or grant site access. Do them in order:
 
 1. Register the MCP server with the client you're running in (see [step 1](#1-connect-your-mcp-client-the-client-runs-the-server-for-you); use the `cmd /c` form on Windows). Node.js 18+ is required — check with `node --version`.
-2. Run `npx -y kibana-bridge-mcp install-extension`. It prints the folder path, copies it to the clipboard and opens the browser's extensions page. Add `--no-open` to skip opening the browser, `--browser <name>` to pick one.
+2. Run `npx -y kibana-bridge-mcp@latest install-extension`. It prints the folder path, copies it to the clipboard and opens the browser's extensions page. Add `--no-open` to skip opening the browser, `--browser <name>` to pick one.
 3. Ask the user to: turn on **Developer mode**, click **Load unpacked**, and paste the printed path. Wait for them to confirm.
 4. Ask the user to open their Kibana / OpenSearch Dashboards site, log in, click the **Kibana Log Bridge** toolbar icon (under the puzzle-piece menu if it isn't pinned) and press **➕ Add this dashboard**, allowing site access when asked.
 5. Tell the user to restart the MCP client (or reconnect MCP servers, e.g. `/mcp` in Claude Code) so the new tools load.

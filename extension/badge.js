@@ -269,7 +269,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
     el.classList.toggle("err", !!(mine && s.status === "error"));
     if (!status.wsConnected) {
       stateEl.textContent = "MCP server not running";
-      el.dataset.title = "Kibana Log Bridge: start the MCP server (npx kibana-bridge-mcp) to let the AI search this tab.";
+      el.dataset.title = "Kibana Log Bridge: start the MCP server (npx -y kibana-bridge-mcp@latest) to let the AI search this tab.";
     } else if (mine && s.status === "searching") {
       stateEl.textContent = `AI is ${s.tool === "inspect_log" ? "inspecting a log in" : s.tool === "get_log_context" ? "pulling context from" : s.mode === "summarize" ? "summarizing" : "searching"} ${q}…`;
       el.dataset.title = `AI is searching ${q} (${s.time})`;
