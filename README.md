@@ -4,6 +4,8 @@
 
 **Let your AI assistant search Kibana / OpenSearch Dashboards logs through your logged-in browser tab. No API keys, no service accounts.**
 
+![The dashboard during an AI search: a green pill in the header reads AI summarized "timeout" · 65 hits, and its popover shows the query, time range, index pattern, a hit histogram and the previous AI searches](docs/images/ai-search.png)
+
 Log platforms behind corporate SSO rarely hand out API tokens. Your browser session is the one credential you always have, so a small extension runs the searches inside your dashboard tab and an MCP server hands the results to Claude Code, Cursor, Codex or any other MCP client.
 
 ![Architecture: the MCP client (Claude Code, Cursor, Codex, …) connects over Streamable HTTP / SSE on localhost:47822 to the MCP server, which connects over a WebSocket on localhost:47821 to the browser extension in your logged-in dashboard tab. All three run on your machine. The extension then sends authenticated requests to /internal/search/… on Kibana / OpenSearch, using your existing login.](docs/images/architecture.png)

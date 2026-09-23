@@ -4,6 +4,8 @@
 
 **AI asistanınız Kibana / OpenSearch Dashboards loglarını, giriş yaptığınız tarayıcı sekmesi üzerinden arasın. API anahtarı yok, servis hesabı yok.**
 
+![AI araması sırasında dashboard: başlıktaki yeşil etiket AI'ın "timeout" aramasını özetlediğini ve 65 sonuç bulduğunu gösteriyor. Açılan panelde sorgu, zaman aralığı, indeks deseni, sonuç histogramı ve önceki AI aramaları yer alıyor](docs/images/ai-search.png)
+
 Kurumsal SSO arkasındaki log platformları nadiren API token verir. Tarayıcı oturumunuz ise elinizde her zaman olan tek kimlik bilgisidir. Küçük bir uzantı aramaları dashboard sekmenizin içinde çalıştırır, MCP sunucusu da sonuçları Claude Code, Cursor, Codex veya başka bir MCP istemcisine iletir.
 
 ![Mimari: MCP istemcisi (Claude Code, Cursor, Codex, …) localhost:47822 üzerinden Streamable HTTP / SSE ile MCP sunucusuna bağlanır. Sunucu da localhost:47821 üzerinden WebSocket ile, giriş yaptığınız dashboard sekmesindeki tarayıcı uzantısına bağlanır. Üçü de sizin bilgisayarınızda çalışır. Uzantı, mevcut oturumunuzu kullanarak Kibana / OpenSearch üzerindeki /internal/search/… adresine kimliği doğrulanmış istekler gönderir.](docs/images/tr/architecture.png)
