@@ -21,10 +21,10 @@
     "message": "Not running"
   },
   "wsHint": {
-    "message": "Your AI client (Claude Code, Cursor, …) starts it automatically while it's open. Not added to your client yet?"
+    "message": "Your AI client starts it automatically while it's open. Not set up yet? Run this once:"
   },
   "wsHintLink": {
-    "message": "See setup"
+    "message": "Using Cursor, Codex or another client? See setup"
   },
   "environments": {
     "message": "Environments"
@@ -217,5 +217,11 @@
   },
   "lastMinutesMany": {
     "message": "Last $1 minutes"
+  },
+  "copy": {
+    "message": "Copy"
+  },
+  "copied": {
+    "message": "Copied"
   }
 }

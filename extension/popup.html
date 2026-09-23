@@ -91,6 +91,36 @@
       color: #c4b5fd;
       font-size: 10px;
     }
+    .cmd {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin: 5px 0 4px;
+      padding: 6px 8px;
+      background: #1e293b;
+      border-radius: 6px;
+    }
+    .cmd code {
+      flex: 1;
+      background: none;
+      padding: 0;
+      font-size: 10.5px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      user-select: all;
+    }
+    .copy-btn {
+      flex: none;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #c4b5fd;
+      background: #312e81;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: #3730a3; }
     .open-btn {
       margin-left: auto;
       padding: 3px 10px;
@@ -137,7 +167,7 @@
     .last-search .query {
       font-weight: 600;
       color: #c4b5fd;
-      word-break: break-all;
+      overflow-wrap: anywhere;
     }
     .last-search .meta {
       font-size: 11px;
@@ -278,7 +308,11 @@
       <span class="status-label" data-i18n="mcpServer"></span>
       <span class="status-value" id="ws-status"></span>
     </div>
-    <div class="hint" id="ws-hint" hidden><span data-i18n="wsHint"></span> <a href="https://github.com/yunusemregul/kibana-mcp#1-add-it-to-your-ai-client" target="_blank" data-i18n="wsHintLink"></a>.</div>
+    <div class="hint" id="ws-hint" hidden>
+      <span data-i18n="wsHint"></span>
+      <div class="cmd"><code id="install-cmd">claude mcp add --scope user kibana-logs -- npx -y kibana-bridge-mcp@latest</code><button class="copy-btn" id="copy-cmd" data-i18n="copy"></button></div>
+      <a href="https://github.com/yunusemregul/kibana-mcp#1-add-it-to-your-ai-client" target="_blank" data-i18n="wsHintLink"></a>
+    </div>
     <div id="env-status-rows"></div>
     <button class="add-site-btn" id="add-site-btn" hidden></button>
     <div class="hint" id="add-site-hint" hidden data-i18n="addSiteHint"></div>

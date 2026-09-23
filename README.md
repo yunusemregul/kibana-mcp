@@ -21,10 +21,10 @@ Takes about two minutes. Using an AI agent with a terminal? [Let it do the setup
 ### 1. Add it to your AI client
 
 ```bash
-claude mcp add kibana-logs -- npx -y kibana-bridge-mcp@latest
+claude mcp add --scope user kibana-logs -- npx -y kibana-bridge-mcp@latest
 ```
 
-Your client starts the server by itself whenever it needs it, and `@latest` keeps it up to date.
+`--scope user` makes it available in all your projects (leave it out to add it to the current project only). Your client starts the server by itself whenever it needs it, and `@latest` keeps it up to date.
 
 <details>
 <summary>Cursor, Claude Desktop, Codex, Gemini CLI, VS Code, Windows</summary>
@@ -50,7 +50,7 @@ gemini mcp add kibana-logs npx kibana-bridge-mcp@latest
 code --add-mcp '{"name":"kibana-logs","command":"npx","args":["-y","kibana-bridge-mcp@latest"]}'
 ```
 
-**Windows:** many clients can't find `npx` on their own, so run it through `cmd /c`. For example `claude mcp add kibana-logs -- cmd /c npx -y kibana-bridge-mcp@latest`, or `"command": "cmd", "args": ["/c", "npx", "-y", "kibana-bridge-mcp@latest"]` in JSON.
+**Windows:** many clients can't find `npx` on their own, so run it through `cmd /c`. For example `claude mcp add --scope user kibana-logs -- cmd /c npx -y kibana-bridge-mcp@latest`, or `"command": "cmd", "args": ["/c", "npx", "-y", "kibana-bridge-mcp@latest"]` in JSON.
 
 **Standalone server:** run `npx -y kibana-bridge-mcp@latest` in a terminal and connect clients to `http://localhost:47822/mcp` (or `/sse` for older clients).
 </details>

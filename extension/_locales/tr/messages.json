@@ -21,10 +21,10 @@
     "message": "Çalışmıyor"
   },
   "wsHint": {
-    "message": "AI istemciniz (Claude Code, Cursor, …) açıkken sunucuyu otomatik başlatır. İstemcinize henüz eklemediniz mi?"
+    "message": "AI istemciniz açıkken sunucuyu otomatik başlatır. Henüz kurmadınız mı? Bunu bir kez çalıştırın:"
   },
   "wsHintLink": {
-    "message": "Kurulum adımları"
+    "message": "Cursor, Codex veya başka bir istemci mi kullanıyorsunuz? Kurulum adımları"
   },
   "environments": {
     "message": "Ortamlar"
@@ -217,5 +217,11 @@
   },
   "lastMinutesMany": {
     "message": "Son $1 dakika"
+  },
+  "copy": {
+    "message": "Kopyala"
+  },
+  "copied": {
+    "message": "Kopyalandı"
   }
 }

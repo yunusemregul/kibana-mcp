@@ -366,3 +366,12 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 poll();
 const pollTimer = setInterval(poll, 1000);
 window.addEventListener("unload", () => clearInterval(pollTimer));
+
+document.getElementById("copy-cmd").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  try {
+    await navigator.clipboard.writeText(document.getElementById("install-cmd").textContent);
+    btn.textContent = t("copied");
+    setTimeout(() => { btn.textContent = t("copy"); }, 1500);
+  } catch (err) { /* clipboard blocked; the command is still selectable */ }
+});

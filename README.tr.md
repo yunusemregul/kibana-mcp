@@ -21,10 +21,10 @@ Yaklaşık iki dakika sürer. Terminali olan bir AI ajanı mı kullanıyorsunuz?
 ### 1. AI istemcinize ekleyin
 
 ```bash
-claude mcp add kibana-logs -- npx -y kibana-bridge-mcp@latest
+claude mcp add --scope user kibana-logs -- npx -y kibana-bridge-mcp@latest
 ```
 
-İstemciniz sunucuya ihtiyaç duyduğunda onu kendisi başlatır. `@latest` sayesinde de hep güncel kalır.
+`--scope user` sunucuyu tüm projelerinizde kullanılabilir yapar (yalnızca mevcut projeye eklemek için bu kısmı çıkarın). İstemciniz sunucuya ihtiyaç duyduğunda onu kendisi başlatır. `@latest` sayesinde de hep güncel kalır.
 
 <details>
 <summary>Cursor, Claude Desktop, Codex, Gemini CLI, VS Code, Windows</summary>
@@ -50,7 +50,7 @@ gemini mcp add kibana-logs npx kibana-bridge-mcp@latest
 code --add-mcp '{"name":"kibana-logs","command":"npx","args":["-y","kibana-bridge-mcp@latest"]}'
 ```
 
-**Windows:** birçok istemci `npx`'i kendi başına bulamaz, bu yüzden `cmd /c` üzerinden çalıştırın. Örneğin `claude mcp add kibana-logs -- cmd /c npx -y kibana-bridge-mcp@latest` ya da JSON'da `"command": "cmd", "args": ["/c", "npx", "-y", "kibana-bridge-mcp@latest"]`.
+**Windows:** birçok istemci `npx`'i kendi başına bulamaz, bu yüzden `cmd /c` üzerinden çalıştırın. Örneğin `claude mcp add --scope user kibana-logs -- cmd /c npx -y kibana-bridge-mcp@latest` ya da JSON'da `"command": "cmd", "args": ["/c", "npx", "-y", "kibana-bridge-mcp@latest"]`.
 
 **Bağımsız sunucu:** terminalde `npx -y kibana-bridge-mcp@latest` çalıştırın ve istemcileri `http://localhost:47822/mcp` adresine bağlayın (eski istemciler için `/sse`).
 </details>
