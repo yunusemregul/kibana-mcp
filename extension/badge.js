@@ -1,4 +1,4 @@
-// badge.js — Runs in ISOLATED world on configured dashboards.
+// badge.js: Runs in ISOLATED world on configured dashboards.
 // Shows a small status pill in the dashboard header so you can see at a
 // glance whether this tab is reachable by the AI.
 if (!window.__kibanaLogBridgeBadgeLoaded) {
@@ -25,7 +25,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
     .klb-badge .klb-state { overflow: hidden; text-overflow: ellipsis; }
     @keyframes klb-pulse { 50% { opacity: 0.3; } }
 
-    /* Hover panel — styled after EUI popovers (light, bordered, subtle shadow) */
+    /* Hover panel, styled after EUI popovers (light, bordered, subtle shadow) */
     .klb-pop {
       position: fixed; z-index: 2147483647; width: 1100px; max-width: calc(100vw - 24px); max-height: calc(100vh - 80px); overflow-y: auto;
       background: #fff; color: #343741; border: 1px solid #d3dae6; border-radius: 6px;
@@ -211,7 +211,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
 
   function ensureBadge() {
     if (badge && badge.isConnected) {
-      // The header mounts after page load — move out of the corner once it exists
+      // The header mounts after page load, so move out of the corner once it exists
       const slot = badge.classList.contains("fixed") && headerSlot();
       if (slot) { badge.classList.remove("fixed"); slot.insertAdjacentElement("afterend", badge); }
       return badge;
@@ -295,7 +295,7 @@ if (!window.__kibanaLogBridgeBadgeLoaded) {
         if (chrome.runtime.lastError) return;
         render(status);
       });
-    } catch (e) { /* extension reloaded — leave the badge as is */ }
+    } catch (e) { /* extension reloaded, so leave the badge as is */ }
   }
 
   poll();

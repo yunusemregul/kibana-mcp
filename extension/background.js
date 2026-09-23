@@ -1,4 +1,4 @@
-// background.js — Service worker (not subject to page CSP)
+// background.js: Service worker (not subject to page CSP)
 // Handles WebSocket connection to the MCP server.
 const DEFAULT_SETTINGS = {
   // Each environment: { name, dashboardPattern ("https://host/*"), indexPattern }
@@ -208,7 +208,7 @@ async function connect() {
   };
 
   ws.onerror = () => {
-    console.log("%c[Kibana Log Bridge] %c⚠️  WebSocket error — is the server running?", "color:#6366f1;font-weight:bold", "color:#ef4444");
+    console.log("%c[Kibana Log Bridge] %c⚠️  WebSocket error. Is the server running?", "color:#6366f1;font-weight:bold", "color:#ef4444");
   };
 }
 
@@ -459,7 +459,7 @@ async function addSiteNow({ tabId, origin }) {
   try {
     const [res] = await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: discoverSite });
     discovered = res?.result || null;
-  } catch (e) { /* page not scriptable — use fallbacks */ }
+  } catch (e) { /* page not scriptable, so use fallbacks */ }
   if (discovered?.isDashboard === false) throw new Error("This page isn't a Kibana / OpenSearch Dashboards page");
 
   const indexPattern = discovered?.defaultTitle || discovered?.all?.[0] || "logs-*";
@@ -509,7 +509,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             logoUrl = res?.result?.url ?? null;
           }
         } catch (e) {
-          // invalid pattern or tab not scriptable — ignore
+          // invalid pattern or tab not scriptable: ignore
         }
         return { ...env, tabCount, logoName, logoUrl };
       }));
@@ -550,7 +550,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       // Session expired → surface the tab so the user can just log in
       if (/HTTP Error: 40[13]/.test(message.error) && sender.tab?.id) {
         chrome.tabs.update(sender.tab.id, { active: true });
-        message.error += " — the dashboard session has expired. The tab has been focused; ask the user to log in there, then retry.";
+        message.error += ": the dashboard session has expired. The tab has been focused; ask the user to log in there, then retry.";
       }
       if (lastSearch?.requestId === message.requestId) {
         lastSearch.status = "error";

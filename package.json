@@ -1,7 +1,7 @@
 {
   "name": "kibana-bridge-mcp",
   "version": "1.0.0",
-  "description": "MCP server that lets AI assistants search Kibana / OpenSearch Dashboards logs through your authenticated browser session — no API keys required.",
+  "description": "MCP server that lets AI assistants search Kibana / OpenSearch Dashboards logs through your authenticated browser session, with no API keys required.",
   "type": "module",
   "main": "server.js",
   "bin": {

@@ -245,7 +245,7 @@ async function addCurrentSite() {
   const already = await chrome.permissions.contains({ origins: [pattern] });
   if (!already) {
     // Chrome's permission prompt may close this popup, so the background
-    // finishes the add on permissions.onAdded — we only kick it off here.
+    // finishes the add on permissions.onAdded. We only kick it off here.
     await chrome.runtime.sendMessage({ type: "PREPARE_ADD_SITE", tabId: activeTab.id, origin });
     btn.textContent = "Allow site access in the Chrome prompt…";
     const granted = await chrome.permissions.request({ origins: [pattern] });

@@ -1,4 +1,4 @@
-// inject.js — Runs in MAIN world (page context)
+// inject.js: Runs in MAIN world (page context)
 // Has access to the page's cookies/session, so fetch() calls are authenticated.
 // Guard against duplicate injection
 if (window.__kibanaLogBridgeInjectLoaded) {
@@ -131,7 +131,7 @@ if (window.__kibanaLogBridgeInjectLoaded) {
       });
       if (response.status === 404) {
         lastError = new Error(`HTTP Error: 404 at ${endpoint.path}`);
-        continue; // wrong flavor — try the next route
+        continue; // wrong flavor, so try the next route
       }
       if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status} ${response.statusText} at ${endpoint.path}`);
@@ -182,7 +182,7 @@ if (window.__kibanaLogBridgeInjectLoaded) {
     else if (spanMs <= 24 * 3600000) histogramInterval = '30m'; // ≤24h → 30m buckets
     else histogramInterval = '3h';                              // >24h → 3h buckets
 
-    // Empty/missing query is valid — caller is searching purely by time and
+    // Empty/missing query is valid because the caller is searching purely by time and
     // filters (used by the context tool, or "show all errors in this window").
     const trimmedQuery = (queryText || '').trim();
     let queryFilters;

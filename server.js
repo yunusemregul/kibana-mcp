@@ -47,7 +47,7 @@ const SOURCE_TAG_FIELDS = (process.env.SOURCE_TAG_FIELDS || 'kubernetes.labels.c
   .split(',').map(s => s.trim()).filter(Boolean);
 
 // 1. Setup WebSocket Server to talk to the Browser.
-// Browser pages always send an http(s) Origin header — reject those so a
+// Browser pages always send an http(s) Origin header, so reject those so a
 // malicious website can't connect to the local bridge. Extension workers
 // (chrome-extension://) and non-browser clients (no Origin) are allowed.
 let wss = null;
@@ -201,7 +201,7 @@ function formatTimestamp(iso) {
 function toIsoOrThrow(value, name) {
   const d = new Date(value);
   if (value === '' || value === null || isNaN(d.getTime())) {
-    throw new Error(`invalid \`${name}\`: ${JSON.stringify(value)} — use an ISO 8601 timestamp, e.g. '2026-09-23T10:28:00Z'`);
+    throw new Error(`invalid \`${name}\`: ${JSON.stringify(value)}. Use an ISO 8601 timestamp, e.g. '2026-09-23T10:28:00Z'`);
   }
   return d.toISOString();
 }
@@ -298,7 +298,7 @@ function describeFilterBadges(includeFilters, excludeFilters, level) {
 }
 
 // Recursively collect every leaf field path from a doc's _source. Arrays
-// don't contribute their index to the path — `arr.0.foo` collapses to `arr.foo`.
+// don't contribute their index to the path: `arr.0.foo` collapses to `arr.foo`.
 function collectLeafPaths(obj, prefix, out) {
   if (obj === null || obj === undefined) {
     if (prefix) out.add(prefix);
@@ -327,7 +327,7 @@ function collectLeafPaths(obj, prefix, out) {
   if (prefix) out.add(prefix);
 }
 
-// Paths that hold identifiers/metadata, never log text — skip during
+// Paths that hold identifiers/metadata, never log text. Skip during
 // display-field auto-detection.
 const AUTO_FIELD_SKIP = /(^|\.)(@?timestamp|time|date|written_at|level|version|host(name)?|port|pid|uid|id|uuid|hash|ip|image|tags?)$|_id$|Id$/;
 
@@ -382,7 +382,7 @@ function renderAvailableFields(hits, totalHits, fieldCaps, strata) {
     .filter(p => !FIELD_NOISE.some(rx => rx.test(p)))
     .sort();
 
-  // Collapse kubernetes.annotations.* — almost always cluster runtime noise.
+  // Collapse kubernetes.annotations.*: almost always cluster runtime noise.
   const annotations = paths.filter(p => p.startsWith('kubernetes.annotations.'));
   if (annotations.length > 0) {
     paths = paths.filter(p => !p.startsWith('kubernetes.annotations.'));
@@ -391,7 +391,7 @@ function renderAvailableFields(hits, totalHits, fieldCaps, strata) {
   }
 
   // Field caps (from the dashboard's _fields_for_wildcard API) give us types
-  // and aggregatability for the sampled paths — when the fetch succeeded.
+  // and aggregatability for the sampled paths (when the fetch succeeded).
   const capsByName = new Map();
   if (Array.isArray(fieldCaps)) {
     for (const f of fieldCaps) {
@@ -406,7 +406,7 @@ function renderAvailableFields(hits, totalHits, fieldCaps, strata) {
     const agg = cap?.aggregatable ? 'aggregatable'
               : kw?.aggregatable ? 'aggregatable via .keyword'
               : null;
-    return `- \`${p}\` — ${type}${agg ? `, ${agg}` : ''}`;
+    return `- \`${p}\`: ${type}${agg ? `, ${agg}` : ''}`;
   };
 
   const md = [];
@@ -460,11 +460,11 @@ function describeEmptyBuckets(sourceField, fieldCaps, totalCount) {
   const caps = Array.isArray(fieldCaps) && fieldCaps.length > 0 ? fieldCaps : null;
   const cap = caps?.find(f => f?.name === base);
   const kw = caps?.find(f => f?.name === `${base}.keyword`);
-  if (caps && !cap && !kw) return `_(field \`${base}\` does not exist in the index mapping — check available_log_fields)_`;
+  if (caps && !cap && !kw) return `_(field \`${base}\` does not exist in the index mapping; check available_log_fields)_`;
   if (totalCount === 0) return '_(no docs matched the query in this window)_';
   if (caps && !cap?.aggregatable && !kw?.aggregatable) return `_(field \`${base}\` exists but is not aggregatable and has no .keyword subfield)_`;
   if (caps) return `_(no values for \`${base}\` in the matching docs)_`;
-  return `_(no buckets — \`${base}\` may not exist in the mapping, no docs matched, or it is not aggregatable and has no .keyword subfield; check available_log_fields)_`;
+  return `_(no buckets: \`${base}\` may not exist in the mapping, no docs matched, or it is not aggregatable and has no .keyword subfield; check available_log_fields)_`;
 }
 
 function renderSummary({ query, timeDesc, filterDesc, totalCount, raw, browserParams, fieldCaps }) {
@@ -482,7 +482,7 @@ function renderSummary({ query, timeDesc, filterDesc, totalCount, raw, browserPa
     md.push('');
   }
 
-  // Terms aggs — keys named `terms_<sanitised field>`, with meta.source_field for the original.
+  // Terms aggs: keys named `terms_<sanitised field>`, with meta.source_field for the original.
   for (const aggKey of Object.keys(aggs)) {
     if (!aggKey.startsWith('terms_')) continue;
     const agg = aggs[aggKey];
@@ -549,7 +549,7 @@ function truncateInspectDoc(src) {
   }
   const ann = doc.kubernetes?.annotations;
   if (ann && typeof ann === 'object') {
-    doc.kubernetes.annotations = `(${Object.keys(ann).length} annotations collapsed — pass full: true)`;
+    doc.kubernetes.annotations = `(${Object.keys(ann).length} annotations collapsed; pass full: true)`;
   }
   const walk = (node) => {
     if (typeof node === 'string') {
@@ -637,7 +637,7 @@ function createMcpServer() {
       type: "string",
       description: knownEnvironments.length > 0
         ? `Which dashboard environment to search, as configured in the extension popup. Available: ${knownEnvironments.join(', ')}. Default: ${knownEnvironments[0]}.`
-        : "Which dashboard environment to search, as configured in the extension popup. The extension has not reported any environments yet — omit this unless the user names one.",
+        : "Which dashboard environment to search, as configured in the extension popup. The extension has not reported any environments yet, so omit this unless the user names one.",
     };
     return {
       tools: [
@@ -646,16 +646,16 @@ function createMcpServer() {
           description: [
             "Searches logs in Kibana / OpenSearch Dashboards via the active browser tab and returns hits.",
             "",
-            "Workflow — investigate the same way a human does in Discover:",
+            "Workflow: investigate the same way a human does in Discover:",
             "1. Start with `summarize_logs` over a wide window (e.g. 7 days) to see total hit count, time histogram, and the top values for noisy dimensions (logger, component, pod, level).",
-            "2. Identify noise dimensions — loggers that dominate the result set with irrelevant chatter, pod tiers that don't match the service you're investigating (e.g. frontend when chasing a backend bug), etc.",
+            "2. Identify noise dimensions: loggers that dominate the result set with irrelevant chatter, pod tiers that don't match the service you're investigating (e.g. frontend when chasing a backend bug), etc.",
             "3. Call `search_logs` with `exclude_filters` listing those noisy {field, value} pairs to narrow the result set.",
-            "4. Iterate: if the remaining hits render empty messages, the docs likely keep their text under a different field — call `available_log_fields` and pass a matching `display_fields` fallback chain.",
+            "4. Iterate: if the remaining hits render empty messages, the docs likely keep their text under a different field. Call `available_log_fields` and pass a matching `display_fields` fallback chain.",
             "5. Add more excludes or change `display_fields` until results are signal, not noise. Pin a specific row with `timestamp_match`.",
             "",
             "Boolean AND in `query`: 'term1 AND term2' requires both terms.",
             "",
-            "IMPORTANT: This tool relies on a Chrome extension bridge — do NOT attempt to open browser tabs, navigate to URLs, or use any browser automation tools if this fails. If it errors, just report the error to the user."
+            "IMPORTANT: This tool relies on a Chrome extension bridge. Do NOT attempt to open browser tabs, navigate to URLs, or use any browser automation tools if this fails. If it errors, just report the error to the user."
           ].join('\n'),
           inputSchema: {
             type: "object",
@@ -701,11 +701,11 @@ function createMcpServer() {
         {
           name: "get_log_context",
           description: [
-            "Returns the log entries within a time window around a specific timestamp. Use this when you've found a suspicious entry (an error, a state change, etc.) and need to see what happened immediately before and after — the human equivalent of clicking 'view surrounding documents' in Kibana/Discover.",
+            "Returns the log entries within a time window around a specific timestamp. Use this when you've found a suspicious entry (an error, a state change, etc.) and need to see what happened immediately before and after (the human equivalent of clicking 'view surrounding documents' in Kibana/Discover).",
             "",
             "Default window is ±60 seconds (so 120s total). Narrow it with `window_seconds` for noisy services, widen for sparse logs.",
             "",
-            `Use \`trace_id\` (filters on \`${TRACE_ID_FIELD}\`, TRACE_ID_FIELD env) or \`include_filters\` to scope to the same trace, pod, or service — otherwise you'll see ALL traffic in the window, which is often too much.`,
+            `Use \`trace_id\` (filters on \`${TRACE_ID_FIELD}\`, TRACE_ID_FIELD env) or \`include_filters\` to scope to the same trace, pod, or service. Otherwise you'll see ALL traffic in the window, which is often too much.`,
             "",
             "Pass `query` only if you also want to constrain by a search term in the window; usually leave it empty."
           ].join('\n'),
@@ -726,7 +726,7 @@ function createMcpServer() {
                 description: `Scope the window to one trace: adds an include filter on \`${TRACE_ID_FIELD}\` (override the field with the TRACE_ID_FIELD env var).`,
               },
               level: levelParam,
-              include_filters: { type: "array", items: filterItemSchema, description: "Highly recommended — scope by traceId, pod_name, or service to avoid drowning in unrelated traffic." },
+              include_filters: { type: "array", items: filterItemSchema, description: "Highly recommended: scope by traceId, pod_name, or service to avoid drowning in unrelated traffic." },
               exclude_filters: { type: "array", items: filterItemSchema },
               display_fields: {
                 type: "array", items: { type: "string" },
@@ -747,7 +747,7 @@ function createMcpServer() {
             "",
             "By default the output is trimmed to stay readable: the raw `log` string is dropped when its parsed `logs.*` object is present, every `extendedStackTrace` keeps its first 5 frames, `kubernetes.annotations` is collapsed to a count, and strings over 4000 chars are cut. Pass `full: true` to get the untouched `_source`.",
             "",
-            "Identifies the doc by `timestamp` (ISO with millisecond precision is usually unique). If multiple docs share the timestamp, pass `include_filters` (e.g. pod_name) to disambiguate — only the first match is returned."
+            "Identifies the doc by `timestamp` (ISO with millisecond precision is usually unique). If multiple docs share the timestamp, pass `include_filters` (e.g. pod_name) to disambiguate. Only the first match is returned."
           ].join('\n'),
           inputSchema: {
             type: "object",
@@ -772,16 +772,16 @@ function createMcpServer() {
         {
           name: "available_log_fields",
           description: [
-            `Returns every populated field path (dotted) found in a sample of matching log docs, annotated with each field's type and aggregatability from the dashboard's field-caps API when available. Call this ONCE at the start of a fresh investigation to learn the schema — what \`aggregate_fields\` and \`display_fields\` paths are valid in this data. The tool samples hits stratified across \`${FIELDS_STRATIFY_FIELD}\` values (FIELDS_STRATIFY_FIELD env) so rare container types still contribute their fields, walks each doc's \`_source\`, and returns a deduplicated list grouped to keep \`kubernetes.annotations.*\` collapsed.`,
+            `Returns every populated field path (dotted) found in a sample of matching log docs, annotated with each field's type and aggregatability from the dashboard's field-caps API when available. Call this ONCE at the start of a fresh investigation to learn the schema: what \`aggregate_fields\` and \`display_fields\` paths are valid in this data. The tool samples hits stratified across \`${FIELDS_STRATIFY_FIELD}\` values (FIELDS_STRATIFY_FIELD env) so rare container types still contribute their fields, walks each doc's \`_source\`, and returns a deduplicated list grouped to keep \`kubernetes.annotations.*\` collapsed.`,
             "",
-            "Use the result to decide which fields to summarize, exclude, include, or display. Subsequent investigation turns rarely need to re-call this — the schema is stable across queries.",
+            "Use the result to decide which fields to summarize, exclude, include, or display. Subsequent investigation turns rarely need to re-call this because the schema is stable across queries.",
             "",
             "Tip: pair it on the very first turn with a `summarize_logs` call (in parallel) so you get distributions and schema in one shot."
           ].join('\n'),
           inputSchema: {
             type: "object",
             properties: {
-              query: queryParam("Same as search_logs — picks docs to sample."),
+              query: queryParam("Same as search_logs: picks docs to sample."),
               ...timeParams(60),
               search_type: { type: "string", enum: ["phrase", "best_fields"] },
               level: levelParam,
@@ -798,7 +798,7 @@ function createMcpServer() {
           description: [
             "Returns a cheap summary of a log query: total hits, time histogram, and top-N values for chosen dimensions. Use this BEFORE `search_logs` to see the shape of the data and decide which `exclude_filters` to apply. No hits are returned (size=0), so this is very cheap on tokens even over 7-day windows.",
             "",
-            "Typical first call for an investigation: `summarize_logs(query, minutes_lookback: 10080)` — gives you total hits per day and the noisy dimensions to exclude in the follow-up search."
+            "Typical first call for an investigation: `summarize_logs(query, minutes_lookback: 10080)`. It gives you total hits per day and the noisy dimensions to exclude in the follow-up search."
           ].join('\n'),
           inputSchema: {
             type: "object",
@@ -810,7 +810,7 @@ function createMcpServer() {
               exclude_filters: {
                 type: "array",
                 items: filterItemSchema,
-                description: "Same as search_logs — apply prior excludes so the summary reflects the narrowed set.",
+                description: "Same as search_logs: apply prior excludes so the summary reflects the narrowed set.",
               },
               include_filters: { type: "array", items: filterItemSchema },
               aggregate_fields: {
@@ -868,7 +868,7 @@ function createMcpServer() {
         full_message,
       };
       // Recurse via the same handler. We reuse the search code path below by
-      // setting toolName variables manually — easier than calling the handler.
+      // setting toolName variables manually, which is easier than calling the handler.
       args.query = rewrittenArgs.query;
       args.time_from = rewrittenArgs.time_from;
       args.time_to = rewrittenArgs.time_to;
@@ -901,15 +901,15 @@ function createMcpServer() {
         const raw = rawResult.rawResponse || rawResult;
         const hits = raw.hits?.hits || [];
         if (hits.length === 0) {
-          return { content: [{ type: "text", text: `# Inspect: \`${timestamp}\`\n\n_(no doc matched — verify timestamp precision or pass include_filters to disambiguate)_` }] };
+          return { content: [{ type: "text", text: `# Inspect: \`${timestamp}\`\n\n_(no doc matched; verify timestamp precision or pass include_filters to disambiguate)_` }] };
         }
         const md = [`# Inspect: \`${timestamp}\``, ''];
-        if (hits.length > 1) md.push(`_(${hits.length} docs matched, showing the first — pass include_filters to disambiguate)_`, '');
+        if (hits.length > 1) md.push(`_(${hits.length} docs matched, showing the first; pass include_filters to disambiguate)_`, '');
         const src = full ? (hits[0]._source || {}) : truncateInspectDoc(hits[0]._source || {});
         md.push('```yaml');
         md.push(yamlStringify(src, { lineWidth: 0 }).trim());
         md.push('```');
-        if (!full) md.push('', '_(truncation applied: duplicate `log`, stack frames beyond 5, annotations, long strings — pass `full: true` to disable)_');
+        if (!full) md.push('', '_(truncation applied: duplicate `log`, stack frames beyond 5, annotations, long strings; pass `full: true` to disable)_');
         return { content: [{ type: "text", text: md.join('\n') }] };
       } catch (error) {
         return { content: [{ type: "text", text: `**Error:** ${error.message}` }], isError: true };
@@ -957,7 +957,7 @@ function createMcpServer() {
           md.push(`# Available fields: \`${query}\` (${totalCount} hits, ${timeDesc})${filterDesc}`);
           md.push('');
           if (hits.length === 0) {
-            md.push('_(no hits — cannot enumerate fields. Try a wider time range or different query.)_');
+            md.push('_(no hits, so cannot enumerate fields. Try a wider time range or different query.)_');
           } else {
             const strataLine = describeStrata(rawResult.strata, hits.length);
             if (strataLine) md.push(strataLine, '');
@@ -1089,7 +1089,7 @@ function createMcpServer() {
         }
 
         // Auto-detect a display field when the configured chain misses most
-        // hits — the log text lives under a schema-specific path. Uses the
+        // hits: the log text lives under a schema-specific path. Uses the
         // already-fetched _source docs, so this costs no extra round trip.
         let autoField = null;
         if (events.length > 0 && events.filter(e => !e.message).length > events.length / 2) {
@@ -1132,7 +1132,7 @@ function createMcpServer() {
 
         if (autoField) {
           md.push('');
-          md.push(`_(some messages auto-rendered from \`${autoField}\` because the default display fields were empty — pass \`display_fields\` to override)_`);
+          md.push(`_(some messages auto-rendered from \`${autoField}\` because the default display fields were empty; pass \`display_fields\` to override)_`);
         }
 
         // 0-hit helper: re-run the same query+time without filters and show
@@ -1140,7 +1140,7 @@ function createMcpServer() {
         if (totalCount === 0) {
           md.push('');
           md.push('---');
-          md.push('## 0 hits — debug helper');
+          md.push('## 0 hits: debug helper');
           md.push(`Window: ${timeDesc}`);
           md.push('');
           try {
@@ -1193,7 +1193,7 @@ function createMcpServer() {
                     sampled = buckets.length > 0;
                   }
                   if (buckets.length === 0) {
-                    md.push(`Top values for \`${field}\`: _(none — field is absent from these docs)_`);
+                    md.push(`Top values for \`${field}\`: _(none: field is absent from these docs)_`);
                   } else {
                     const vals = buckets.slice(0, 5).map(b => `\`${b.key}\` (${b.doc_count})`).join(', ');
                     md.push(`Top values for \`${field}\`${sampled ? ` _(from ${helperHits.length} sampled docs)_` : ''}: ${vals}`);
@@ -1531,7 +1531,7 @@ async function takeOverFrom(peer) {
   return false;
 }
 
-// Another instance owns the browser bridge — serve stdio by forwarding every
+// Another instance owns the browser bridge, so serve stdio by forwarding every
 // request to it over Streamable HTTP, so multiple MCP clients can each spawn
 // `npx kibana-bridge-mcp` and transparently share one bridge.
 async function runStdioProxy(peer) {
@@ -1595,7 +1595,7 @@ async function main() {
         await runStdioProxy(peer);
         return;
       }
-      console.error(`[MCP Server] ✅ Already running (v${peer.version}) at http://127.0.0.1:${MCP_PORT}/mcp — nothing to do.`);
+      console.error(`[MCP Server] ✅ Already running (v${peer.version}) at http://127.0.0.1:${MCP_PORT}/mcp. Nothing to do.`);
       process.exit(0);
     }
   }

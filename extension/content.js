@@ -1,4 +1,4 @@
-// content.js — Runs in ISOLATED world
+// content.js: Runs in ISOLATED world
 // Relays messages between background service worker and inject.js (MAIN world).
 // Guard against duplicate injection
 if (window.__kibanaLogBridgeContentLoaded) {
