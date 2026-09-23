@@ -1,5 +1,7 @@
 # Kibana Bridge MCP
 
+[![npm](https://img.shields.io/npm/v/kibana-bridge-mcp)](https://www.npmjs.com/package/kibana-bridge-mcp) [![CI](https://github.com/yunusemregul/kibana-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/yunusemregul/kibana-mcp/actions/workflows/ci.yml) [![node](https://img.shields.io/node/v/kibana-bridge-mcp)](https://nodejs.org) [![license](https://img.shields.io/npm/l/kibana-bridge-mcp)](LICENSE)
+
 [English](README.md) | **Türkçe**
 
 **AI asistanınız Kibana / OpenSearch Dashboards loglarını, giriş yaptığınız tarayıcı sekmesi üzerinden arasın. API anahtarı yok, servis hesabı yok.**
