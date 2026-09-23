@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      color: #e2e8f0;
+      background: #0f172a;
+    }
+    .header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .header .subtitle {
+      font-size: 11px;
+      color: #818cf8;
+      margin-top: 4px;
+    }
+    .header .logo-img {
+      max-height: 40px;
+      max-width: 230px;
+      object-fit: contain;
+      display: block;
+    }
+    .gear-btn {
+      margin-left: auto;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .gear-btn:hover { color: #e2e8f0; background: #1e293b; }
+    .section {
+      padding: 12px 16px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .section:last-child { border-bottom: none; }
+    .section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.green { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+    .dot.red { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
+    .dot.yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b88; }
+    .status-label { color: #94a3b8; }
+    .status-value { margin-left: auto; font-weight: 500; }
+    .status-value.ok { color: #22c55e; }
+    .status-value.err { color: #ef4444; }
+    .status-value.warn { color: #f59e0b; }
+    .hint {
+      font-size: 11px;
+      color: #64748b;
+      padding: 2px 0 4px 16px;
+    }
+    .hint code {
+      background: #1e293b;
+      border-radius: 3px;
+      padding: 1px 4px;
+      color: #c4b5fd;
+      font-size: 10px;
+    }
+    .open-btn {
+      margin-left: auto;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #c4b5fd;
+      background: #1e293b;
+      border: 1px solid #4f46e5;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .open-btn:hover { background: #312e81; }
+    .open-btn.ok { color: #22c55e; border-color: #166534; }
+    .open-btn.ok:hover { background: #14532d; }
+    .trash-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0 2px;
+      margin-left: 6px;
+      line-height: 1;
+    }
+    .trash-btn:hover { color: #ef4444; }
+    .trash-btn.armed {
+      color: #ef4444;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid #ef4444;
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+    .status-row .status-value, .status-row .open-btn { margin-left: auto; }
+    .last-search {
+      background: #1e293b;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .last-search .query {
+      font-weight: 600;
+      color: #c4b5fd;
+      word-break: break-all;
+    }
+    .last-search .meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .last-search .result {
+      margin-top: 6px;
+      font-size: 12px;
+    }
+    .empty {
+      color: #475569;
+      font-style: italic;
+      font-size: 12px;
+    }
+    .field {
+      margin-bottom: 8px;
+    }
+    .field label {
+      display: block;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+    .field input {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #e2e8f0;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 5px;
+      outline: none;
+    }
+    .field input:focus { border-color: #6366f1; }
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .save-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #f1f5f9;
+      background: #4f46e5;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .save-btn:hover { background: #6366f1; }
+    .save-msg { font-size: 11px; }
+    .save-msg.ok { color: #22c55e; }
+    .save-msg.err { color: #ef4444; }
+    .add-btn {
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #c4b5fd;
+      background: transparent;
+      border: 1px dashed #4f46e5;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .add-btn:hover { background: #1e293b; }
+    .add-site-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #f1f5f9;
+      background: #4f46e5;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .add-site-btn:hover { background: #6366f1; }
+    .add-site-btn:disabled { background: #334155; color: #94a3b8; cursor: default; }
+    .env-card {
+      background: #1e293b;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .env-card .field { margin-bottom: 6px; }
+    .env-card .field:last-child { margin-bottom: 0; }
+    .env-card input { background: #0f172a; }
+    .env-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .env-card-head .env-num {
+      font-size: 10px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .remove-btn:hover { text-decoration: underline; }
+    details.advanced { margin-top: 10px; }
+    details.advanced summary {
+      font-size: 11px;
+      color: #64748b;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 6px;
+    }
+    details.advanced summary:hover { color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="title-block">
+      <h1>Kibana Log Bridge</h1>
+      <div class="subtitle" id="active-tab-name"></div>
+    </div>
+    <button class="gear-btn" id="gear-btn" title="Settings">⚙</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Status</div>
+    <div class="status-row">
+      <span class="dot" id="ws-dot"></span>
+      <span class="status-label">MCP Server</span>
+      <span class="status-value" id="ws-status"></span>
+    </div>
+    <div class="hint" id="ws-hint" hidden>Run: <code>npx kibana-bridge-mcp</code></div>
+    <div id="env-status-rows"></div>
+    <button class="add-site-btn" id="add-site-btn" hidden></button>
+    <div class="hint" id="add-site-hint" hidden>Chrome will ask for access to this site. If the popup closes, the dashboard is still added — reopen to check.</div>
+  </div>
+
+  <div class="section" id="settings-section" hidden>
+    <div class="section-title">Environments</div>
+    <div id="env-list"></div>
+    <div class="save-row">
+      <button class="add-btn" id="add-env-btn">+ Add environment</button>
+    </div>
+    <details class="advanced">
+      <summary>Advanced</summary>
+      <div class="field">
+        <label for="ws-port">MCP server WebSocket port</label>
+        <input type="number" id="ws-port" placeholder="47821">
+      </div>
+    </details>
+    <div class="save-row">
+      <button class="save-btn" id="save-btn">Save</button>
+      <span class="save-msg" id="save-msg"></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Last Search</div>
+    <div id="last-search-container">
+      <span class="empty">No searches yet</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

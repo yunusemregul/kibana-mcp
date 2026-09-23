@@ -1,0 +1,60 @@
+{
+  "name": "kibana-bridge-mcp",
+  "version": "1.0.0",
+  "description": "MCP server that lets AI assistants search Kibana / OpenSearch Dashboards logs through your authenticated browser session — no API keys required.",
+  "type": "module",
+  "main": "server.js",
+  "bin": {
+    "kibana-bridge-mcp": "server.js"
+  },
+  "files": [
+    "server.js",
+    "install-extension.js",
+    "extension",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node server.js",
+    "verify": "node scripts/verify.js",
+    "prepublishOnly": "npm run verify",
+    "version": "node scripts/sync-extension-version.js && git add extension/manifest.json",
+    "pm2:start": "pm2 start server.js --name kibana-mcp --time",
+    "pm2:stop": "pm2 stop kibana-mcp",
+    "pm2:restart": "pm2 restart kibana-mcp",
+    "pm2:delete": "pm2 delete kibana-mcp",
+    "pm2:logs": "pm2 logs kibana-mcp",
+    "pm2:status": "pm2 status kibana-mcp",
+    "pm2:save": "pm2 save",
+    "pm2:startup": "pm2 startup"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "kibana",
+    "opensearch",
+    "opensearch-dashboards",
+    "logs",
+    "observability",
+    "chrome-extension",
+    "claude",
+    "ai"
+  ],
+  "author": "Emre Gül",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yunusemregul/kibana-mcp.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ws": "^8.0.0",
+    "yaml": "^2.8.2"
+  },
+  "devDependencies": {
+    "pm2": "^6.0.13"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Kibana Log Bridge",
+  "description": "Bridges your authenticated Kibana / OpenSearch Dashboards browser session to a local MCP server so AI assistants can search your logs.",
+  "version": "1.0.0",
+  "permissions": ["tabs", "activeTab", "alarms", "scripting", "storage"],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
