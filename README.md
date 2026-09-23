@@ -59,7 +59,7 @@ This copies the extension folder path to your clipboard and opens your browser's
 
 Works in Chrome, Edge, Brave, Arc, Vivaldi and Opera. Install it in the browser you use for your dashboard.
 
-<details>
+<details open>
 <summary>Show me with screenshots</summary>
 
 ![Turn on Developer mode](docs/images/step1-developer-mode.png)
